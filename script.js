@@ -113,6 +113,16 @@ let achievements = {
 };
 
 function speak(text) {
+    try {
+        // 优先使用Android原生TTS（在APP中可用）
+        if (typeof AndroidTTS !== 'undefined') {
+            AndroidTTS.speak(text);
+            return;
+        }
+    } catch(e) {
+        console.log('AndroidTTS error: ' + e);
+    }
+    // 浏览器环境使用Web Speech API
     if ('speechSynthesis' in window) {
         window.speechSynthesis.cancel();
         const utterance = new SpeechSynthesisUtterance(text);
