@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>乔乔的拼音大战僵尸</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="script.js"></script>
+</head>
+<body>
+    <div id="app">
+        <div id="home-screen" class="screen active">
+            <div class="title-container">
+                <h1 class="main-title">🌱 乔乔的拼音大战僵尸 🌱</h1>
+                <p class="subtitle">学习拼音，保卫花园！</p>
+            </div>
+            
+            <div class="menu-items">
+                <button class="menu-btn learn-btn" onclick="showSection('learn')">
+                    <span class="icon">📚</span>
+                    <span class="btn-text">拼音学习</span>
+                    <span class="btn-desc">认识声母、韵母</span>
+                </button>
+                
+                <button class="menu-btn game-btn" onclick="startGame()">
+                    <span class="icon">🎮</span>
+                    <span class="btn-text">大战僵尸</span>
+                    <span class="btn-desc">拼对拼音打僵尸</span>
+                </button>
+                
+                <button class="menu-btn practice-btn" onclick="showSection('practice')">
+                    <span class="icon">✏️</span>
+                    <span class="btn-text">趣味练习</span>
+                    <span class="btn-desc">听音选拼音</span>
+                </button>
+                
+                <button class="menu-btn achievement-btn" onclick="showSection('achievements')">
+                    <span class="icon">🏆</span>
+                    <span class="btn-text">成就收集</span>
+                    <span class="btn-desc">查看你的勋章</span>
+                </button>
+            </div>
+            
+            <div class="garden-preview">
+                <div class="sun">☀️</div>
+                <div class="plant plant-1">🌻</div>
+                <div class="plant plant-2">🌿</div>
+                <div class="zombie zombie-1">🧟</div>
+            </div>
+        </div>
+
+        <div id="learn-screen" class="screen">
+            <div class="header">
+                <button class="back-btn" onclick="showSection('home')">← 返回</button>
+                <h2>拼音学习</h2>
+            </div>
+            
+            <div class="learn-tabs">
+                <button class="tab active" onclick="switchTab('shengmu')">声母</button>
+                <button class="tab" onclick="switchTab('yunmu')">韵母</button>
+                <button class="tab" onclick="switchTab('zhengti')">整体认读</button>
+            </div>
+            
+            <div class="pinyin-grid" id="pinyin-grid">
+            </div>
+            
+            <div class="pinyin-detail" id="pinyin-detail">
+                <div class="detail-char" id="detail-char">点击拼音查看详情</div>
+                <div class="detail-sound" id="detail-sound">发音提示</div>
+                <button class="speak-btn" onclick="speakCurrent()">🔊 听发音</button>
+            </div>
+        </div>
+
+        <div id="game-screen" class="screen">
+            <div class="game-header">
+                <button class="back-btn" onclick="showSection('home')">← 返回</button>
+                <div class="score-board">
+                    <span>☀️ <span id="sun-score">50</span></span>
+                    <span>❤️ <span id="lives">5</span></span>
+                    <span>🏆 <span id="level">1</span></span>
+                </div>
+            </div>
+            
+            <div class="game-area" id="game-area">
+                <div class="game-row" id="row-1"></div>
+                <div class="game-row" id="row-2"></div>
+                <div class="game-row" id="row-3"></div>
+            </div>
+            
+            <div class="plant-selector">
+                <div class="plant-card" data-pinyin="b" onclick="selectPlant('b')">
+                    <span class="plant-emoji">🌻</span>
+                    <span class="plant-pinyin">b</span>
+                    <span class="cost">10</span>
+                </div>
+                <div class="plant-card" data-pinyin="p" onclick="selectPlant('p')">
+                    <span class="plant-emoji">🌿</span>
+                    <span class="plant-pinyin">p</span>
+                    <span class="cost">10</span>
+                </div>
+                <div class="plant-card" data-pinyin="m" onclick="selectPlant('m')">
+                    <span class="plant-emoji">🌵</span>
+                    <span class="plant-pinyin">m</span>
+                    <span class="cost">10</span>
+                </div>
+                <div class="plant-card" data-pinyin="f" onclick="selectPlant('f')">
+                    <span class="plant-emoji">🌸</span>
+                    <span class="plant-pinyin">f</span>
+                    <span class="cost">10</span>
+                </div>
+                <div class="plant-card sun-flower" onclick="selectPlant('sun')">
+                    <span class="plant-emoji">🌞</span>
+                    <span class="plant-pinyin">太阳</span>
+                    <span class="cost">25</span>
+                </div>
+            </div>
+            
+            <div class="question-panel" id="question-panel">
+                <div class="question-text">请点击发出 "<span id="target-pinyin">b</span>" 音的植物！</div>
+            </div>
+        </div>
+
+        <div id="practice-screen" class="screen">
+            <div class="header">
+                <button class="back-btn" onclick="showSection('home')">← 返回</button>
+                <h2>听音选拼音</h2>
+            </div>
+            
+            <div class="practice-area">
+                <div class="practice-score">
+                    <span>得分: <span id="practice-score">0</span></span>
+                    <span>正确: <span id="practice-correct">0</span>/<span id="practice-total">0</span></span>
+                </div>
+                
+                <div class="audio-player">
+                    <button class="big-play-btn" onclick="playCurrentQuestion()">🔊 播放发音</button>
+                </div>
+                
+                <div class="options-grid" id="options-grid">
+                </div>
+                
+                <div class="feedback" id="feedback"></div>
+            </div>
+        </div>
+
+        <div id="achievements-screen" class="screen">
+            <div class="header">
+                <button class="back-btn" onclick="showSection('home')">← 返回</button>
+                <h2>成就收集</h2>
+            </div>
+            
+            <div class="achievements-grid">
+                <div class="achievement-item" id="achievement-1">
+                    <div class="achievement-icon">🌟</div>
+                    <div class="achievement-title">拼音新手</div>
+                    <div class="achievement-desc">学习10个拼音</div>
+                    <div class="progress-bar"><div class="progress" id="progress-1"></div></div>
+                </div>
+                <div class="achievement-item" id="achievement-2">
+                    <div class="achievement-icon">💪</div>
+                    <div class="achievement-title">拼读高手</div>
+                    <div class="achievement-desc">答对20道题目</div>
+                    <div class="progress-bar"><div class="progress" id="progress-2"></div></div>
+                </div>
+                <div class="achievement-item" id="achievement-3">
+                    <div class="achievement-icon">🏅</div>
+                    <div class="achievement-title">僵尸猎人</div>
+                    <div class="achievement-desc">打败10个僵尸</div>
+                    <div class="progress-bar"><div class="progress" id="progress-3"></div></div>
+                </div>
+                <div class="achievement-item" id="achievement-4">
+                    <div class="achievement-icon">👑</div>
+                    <div class="achievement-title">拼音之王</div>
+                    <div class="achievement-desc">完成所有学习</div>
+                    <div class="progress-bar"><div class="progress" id="progress-4"></div></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="game-over-modal" class="modal">
+            <div class="modal-content">
+                <h3>游戏结束！</h3>
+                <p>最终得分: <span id="final-score">0</span></p>
+                <button onclick="showSection('home')">返回首页</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
