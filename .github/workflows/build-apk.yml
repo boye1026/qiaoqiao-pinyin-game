@@ -25,17 +25,35 @@ jobs:
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
 
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.7'
+
       - name: Install Cordova
-        run: npm install -g cordova
+        run: npm install -g cordova@12
+
+      - name: Create Cordova project
+        run: |
+          cordova create qiaoqiao com.qiaoqiao.pinyin "乔乔拼音"
+
+      - name: Copy project files
+        run: |
+          cp config.xml qiaoqiao/
+          cp -r www/* qiaoqiao/www/
 
       - name: Add Android platform
-        run: cordova platform add android
+        run: |
+          cd qiaoqiao
+          cordova platform add android@13
 
       - name: Build APK
-        run: cordova build android --debug
+        run: |
+          cd qiaoqiao
+          cordova build android --debug
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: qiaoqiao-pinyin-apk
-          path: platforms/android/app/build/outputs/apk/debug/*.apk
+          path: qiaoqiao/platforms/android/app/build/outputs/apk/debug/*.apk
