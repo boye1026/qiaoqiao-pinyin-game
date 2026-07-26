@@ -1,0 +1,26 @@
+<?xml version='1.0' encoding='utf-8'?>
+<widget id="com.qiaoqiao.pinyin" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+    <name>乔乔的拼音大战僵尸</name>
+    <description>
+        儿童拼音学习游戏，植物大战僵尸主题，让孩子在游戏中学习拼音。
+    </description>
+    <author email="boye1026@qq.com" href="https://github.com/boye1026">
+        乔乔爸爸
+    </author>
+    <content src="index.html" />
+    <allow-intent href="http://*/*" />
+    <allow-intent href="https://*/*" />
+    <preference name="Fullscreen" value="true" />
+    <preference name="Orientation" value="portrait" />
+    <preference name="DisallowOverscroll" value="true" />
+    <preference name="BackgroundColor" value="#87ceeb" />
+    <preference name="StatusBarBackgroundColor" value="#2d5a27" />
+    <preference name="StatusBarStyle" value="lightcontent" />
+    <preference name="android-minSdkVersion" value="22" />
+    <preference name="android-targetSdkVersion" value="33" />
+    <preference name="android-installLocation" value="auto" />
+    <preference name="AndroidPersistentFileLocation" value="Compatibility" />
+    <platform name="android">
+        <allow-intent href="market:*" />
+    </platform>
+</widget>
