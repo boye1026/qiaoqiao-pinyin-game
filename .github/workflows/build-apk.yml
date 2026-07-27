@@ -47,6 +47,12 @@ jobs:
           cd qiaoqiao
           cordova platform add android@13
 
+      - name: Replace MainActivity with TTS-enabled version
+        run: |
+          mkdir -p qiaoqiao/platforms/android/app/src/main/java/com/qiaoqiao/pinyin
+          cp qiaoqiao-apk/app/src/main/java/com/qiaoqiao/pinyin/MainActivity.java qiaoqiao/platforms/android/app/src/main/java/com/qiaoqiao/pinyin/MainActivity.java
+          echo "MainActivity.java replaced successfully"
+
       - name: Build APK
         run: |
           cd qiaoqiao
