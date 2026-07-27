@@ -34,7 +34,6 @@ public class MainActivity extends Activity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-        // 启动TTS
         initTTS();
 
         webView = new WebView(this);
@@ -48,12 +47,11 @@ public class MainActivity extends Activity {
         settings.setAllowContentAccess(true);
         settings.setMediaPlaybackRequiresUserGesture(false);
 
-        // 开启调试
         WebView.setWebContentsDebuggingEnabled(true);
 
         webView.addJavascriptInterface(new TTSInterface(), "AndroidTTS");
         webView.setWebChromeClient(new WebChromeClient());
-        webView.loadUrl("file:///android_asset/index.html");
+        webView.loadUrl("file:///android_asset/www/index.html");
     }
 
     private void initTTS() {
@@ -227,7 +225,7 @@ public class MainActivity extends Activity {
 
     @Override
     public void onBackPressed() {
-        if (webView.canGoBack()) {
+        if (webView != null && webView.canGoBack()) {
             webView.goBack();
         } else {
             super.onBackPressed();
