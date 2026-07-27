@@ -15,10 +15,12 @@ import android.webkit.WebChromeClient;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import org.apache.cordova.CordovaActivity;
+
 import java.util.ArrayList;
 import java.util.Locale;
 
-public class MainActivity extends Activity {
+public class MainActivity extends CordovaActivity {
     private static final String TAG = "QiaoQiaoTTS";
     private WebView webView;
     private TextToSpeech tts;
@@ -29,29 +31,36 @@ public class MainActivity extends Activity {
     private int retryCount = 0;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         initTTS();
 
-        webView = new WebView(this);
-        setContentView(webView);
-
-        WebSettings settings = webView.getSettings();
-        settings.setJavaScriptEnabled(true);
-        settings.setDomStorageEnabled(true);
-        settings.setDatabaseEnabled(true);
-        settings.setAllowFileAccess(true);
-        settings.setAllowContentAccess(true);
-        settings.setMediaPlaybackRequiresUserGesture(false);
-
         WebView.setWebContentsDebuggingEnabled(true);
 
-        webView.addJavascriptInterface(new TTSInterface(), "AndroidTTS");
-        webView.setWebChromeClient(new WebChromeClient());
-        webView.loadUrl("file:///android_asset/www/index.html");
+        loadUrl("file:///android_asset/www/index.html");
+
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    java.lang.reflect.Field f = CordovaActivity.class.getDeclaredField("appView");
+                    f.setAccessible(true);
+                    webView = (WebView) f.get(this);
+                    if (webView != null) {
+                        webView.addJavascriptInterface(new TTSInterface(), "AndroidTTS");
+                        WebSettings s = webView.getSettings();
+                        s.setJavaScriptEnabled(true);
+                        s.setMediaPlaybackRequiresUserGesture(false);
+                        Log.d(TAG, "JS接口注入成功");
+                    }
+                } catch (Exception e) {
+                    Log.e(TAG, "JS接口注入失败: " + e.getMessage());
+                }
+            }
+        }, 1500);
     }
 
     private void initTTS() {
