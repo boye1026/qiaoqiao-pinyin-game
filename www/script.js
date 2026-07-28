@@ -113,6 +113,19 @@ let achievements = {
 };
 
 function speak(text) {
+    if (!text) return;
+
+    // 优先使用 Android 原生 TTS（WebView 中浏览器 speechSynthesis 不可用）
+    if (typeof AndroidTTS !== 'undefined' && AndroidTTS) {
+        try {
+            AndroidTTS.speak(text);
+            return;
+        } catch (e) {
+            console.log('AndroidTTS调用失败，fallback到Web TTS: ' + e);
+        }
+    }
+
+    // Fallback: 浏览器 Web Speech API（在 Android WebView 中通常不可用）
     if ('speechSynthesis' in window) {
         window.speechSynthesis.cancel();
         const utterance = new SpeechSynthesisUtterance(text);
