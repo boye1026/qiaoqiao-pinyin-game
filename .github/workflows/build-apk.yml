@@ -56,9 +56,18 @@ jobs:
       - name: Build APK
         run: |
           cd qiaoqiao
-          cordova build android --debug
+          cordova build android --debug --verbose
 
-      - name: Upload APK
+      - name: Find and copy APK
+        run: |
+          echo "=== Searching for APK ==="
+          find qiaoqiao/platforms/android -name "*.apk" -type f
+          echo "=== Copying APK ==="
+          mkdir -p download
+          cp qiaoqiao/platforms/android/app/build/outputs/apk/debug/*.apk download/qiaoqiao.apk || true
+          ls -la download/ || true
+
+      - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
           name: qiaoqiao-pinyin-apk
