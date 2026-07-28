@@ -115,23 +115,34 @@ let achievements = {
 function speak(text) {
     if (!text) return;
 
-    // 优先使用 Android 原生 TTS（WebView 中浏览器 speechSynthesis 不可用）
-    if (typeof AndroidTTS !== 'undefined' && AndroidTTS) {
+    // 优先使用 Android 原生 TTS
+    if (typeof AndroidTTS !== 'undefined' && AndroidTTS && AndroidTTS.speak) {
         try {
+            var status = AndroidTTS.getStatus ? AndroidTTS.getStatus() : 'unknown';
+            console.log('[TTS] 调用AndroidTTS.speak: ' + text + ' status=' + status);
             AndroidTTS.speak(text);
             return;
         } catch (e) {
-            console.log('AndroidTTS调用失败，fallback到Web TTS: ' + e);
+            console.log('[TTS] AndroidTTS调用失败: ' + e);
         }
+    } else {
+        console.log('[TTS] AndroidTTS接口不可用，typeof=' + typeof AndroidTTS);
     }
 
-    // Fallback: 浏览器 Web Speech API（在 Android WebView 中通常不可用）
+    // Fallback: 浏览器 Web Speech API
     if ('speechSynthesis' in window) {
-        window.speechSynthesis.cancel();
-        const utterance = new SpeechSynthesisUtterance(text);
-        utterance.lang = 'zh-CN';
-        utterance.rate = 0.8;
-        window.speechSynthesis.speak(utterance);
+        try {
+            window.speechSynthesis.cancel();
+            var utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'zh-CN';
+            utterance.rate = 0.8;
+            window.speechSynthesis.speak(utterance);
+            console.log('[TTS] 使用Web Speech API播放');
+        } catch (e) {
+            console.log('[TTS] Web Speech API失败: ' + e);
+        }
+    } else {
+        console.log('[TTS] 所有TTS方式均不可用');
     }
 }
 
